@@ -1,0 +1,8 @@
+app/account/migrations
+app/contest/migrations
+.idea
+venv
+app/account/__pycache__
+app/contest/__pycache__
+app/__pycache__
+__pycache__
