@@ -14,7 +14,7 @@ class RegisterView(APIView):
         :return:
         '''
         try:
-            jsonParams = json.loads(request.body)
+            jsonParams = json.loads(str(request.body))
             student_id = jsonParams.get('studentId')
             if UserAccount.objects.filter(student_id=student_id).exists():
                 return JsonResponse({
