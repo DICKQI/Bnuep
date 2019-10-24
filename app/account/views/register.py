@@ -3,6 +3,7 @@ from app.account.models import UserAccount, AccountPassword
 from django.contrib.auth.hashers import make_password
 from django.http import JsonResponse
 import json
+import sys
 
 
 class RegisterView(APIView):
@@ -14,7 +15,8 @@ class RegisterView(APIView):
         :return:
         '''
         try:
-            jsonParams = json.loads(str(request.body))
+            print("Python Version {}".format(str(sys.version).replace('\n', '')))
+            jsonParams = json.loads(request.body)
             student_id = jsonParams.get('studentId')
             if UserAccount.objects.filter(student_id=student_id).exists():
                 return JsonResponse({
