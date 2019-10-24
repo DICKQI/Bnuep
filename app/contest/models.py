@@ -68,6 +68,8 @@ class Contest(models.Model):
 
     UpperLimit = models.IntegerField(verbose_name='队伍人数上限', default=3)
 
+    picture = models.ImageField(verbose_name='比赛图片', blank=True, upload_to='contest')
+
     def __str__(self):
         return self.contestName
 

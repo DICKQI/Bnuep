@@ -31,20 +31,26 @@ class SignupView(APIView):
                     'status': False,
                     'errMsg': '比赛已截止报名或者未开始'
                 }, status=401)
+            '''判断该用户在这次比赛中参加的队伍数量是否超过3个'''
+            if contest.team.all().filter(teamMember__account=user).count() >= 3:
+                return JsonResponse({
+                    'status': False,
+                    'errMsg': '你在本次比赛中参加的队伍过多'
+                }, status=401)
             jsonParams = json.loads(request.body)
             '''创建队伍与临时比赛账户'''
             leader = TeamMember.objects.create(account=user)
             team = TeamModel.objects.create(
-                works_name=jsonParams.get('works name'),
-                team_name=jsonParams.get('team name'),
-                guide_teacher=jsonParams.get('guide teacher'),
+                works_name=jsonParams.get('works_name'),
+                team_name=jsonParams.get('team_name'),
+                guide_teacher=jsonParams.get('guide_teacher'),
                 member_number=1
             )
             team.teamMember.add(leader)
             team.save()
             '''将队伍加入比赛'''
             contest.team.add(team)
-            '''返回json响应'''
+            '''json响应'''
             return JsonResponse({
                 'status': True,
                 'tid': team.id,
@@ -79,6 +85,13 @@ class SignupView(APIView):
                     'errMsg': '队伍不存在'
                 }, status=404)
             team = team[0]
+            '''判断本队伍是否是本次比赛的'''
+            if not team.contest_set.filter(team__contest=contest).exists():
+                return JsonResponse({
+                    'status': False,
+                    'errMsg': '队伍不存在'
+                }, status=404)
+            '''判断队伍人数是否超过上限'''
             if team.member_number == contest.UpperLimit:
                 return JsonResponse({
                     'status': False,
@@ -90,6 +103,12 @@ class SignupView(APIView):
                 return JsonResponse({
                     'status': False,
                     'errMsg': '你已经在队伍中'
+                }, status=401)
+            '''判断该用户在这次比赛中参加的队伍数量是否超过3个'''
+            if contest.team.all().filter(teamMember__account=user).count() >= 3:
+                return JsonResponse({
+                    'status': False,
+                    'errMsg': '你在本次比赛中参加的队伍过多'
                 }, status=401)
             member = TeamMember.objects.create(
                 account=user,

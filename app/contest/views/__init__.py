@@ -1,6 +1,7 @@
 from .signupInfo import SignupView
-from .contestInfo import *
+from .contestInfo import ContestView
+from .contestListInfo import ContestListView
 
 __all__ = [
-    'SignupView'
+    'SignupView', 'ContestListView', 'ContestView'
 ]
