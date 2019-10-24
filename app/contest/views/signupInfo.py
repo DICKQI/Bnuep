@@ -37,7 +37,7 @@ class SignupView(APIView):
                     'status': False,
                     'errMsg': '你在本次比赛中参加的队伍过多'
                 }, status=401)
-            jsonParams = json.loads(request.body)
+            jsonParams = json.loads((request.body).decode('utf-8'))
             '''创建队伍与临时比赛账户'''
             leader = TeamMember.objects.create(account=user)
             team = TeamModel.objects.create(
@@ -213,7 +213,7 @@ class SignupView(APIView):
                 'status': False,
                 'errMsg': '你没有权限操作'
             }, status=401)
-        jsonParams = json.loads(request.body)
+        jsonParams = json.loads((request.body).decode('utf-8'))
         if jsonParams.get('works name'):
             team.works_name = jsonParams.get('works name')
         if jsonParams.get('team name'):
