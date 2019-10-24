@@ -50,5 +50,5 @@ class RegisterView(APIView):
         except Exception as ex:
             return JsonResponse({
                 'status': False,
-                'errMsg': ex
+                'errMsg': str(ex)
             }, status=403)
