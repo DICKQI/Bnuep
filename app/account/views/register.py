@@ -47,8 +47,8 @@ class RegisterView(APIView):
                 'id': newUser.id,
                 'name': newUser.name
             })
-        except:
+        except Exception as ex:
             return JsonResponse({
                 'status': False,
-                'errMsg': '出现未知错误'
+                'errMsg': ex
             }, status=403)
