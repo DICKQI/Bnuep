@@ -18,21 +18,11 @@ class ContestListView(APIView):
         :return:
         '''
         contestsOBJ = Contest.objects.all()
-        objPage = Paginator(contestsOBJ, 10)
-        page = request.GET.get('page')
-        try:
-            objList = objPage.page(page)
-        except PageNotAnInteger:
-            objList = objPage.page(1)
-        except EmptyPage:
-            objList = objPage.page(1)
-        contests = [model_to_dict(con, exclude=self.EXCLUDE_FIELDS) for con in objList if con.contestStatus]
+        contests = [model_to_dict(con, exclude=self.EXCLUDE_FIELDS) for con in contestsOBJ if con.contestStatus]
         for c in contests:
             c['beginTime'] = str(c['beginTime'])[:10]
             c['signupEndTime'] = str(c['signupEndTime'])[:10]
         return JsonResponse({
             'status': True,
             'contest': contests,
-            'has next': objList.has_next(),
-            'has previous': objList.has_previous()
         })

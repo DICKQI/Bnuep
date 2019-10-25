@@ -134,9 +134,9 @@ class SignupView(APIView):
         '''
         退出队伍/移除队员
         :param request:
-        :param tid:
-        :param cid:
-        :param mid:
+        :param tid: team id
+        :param cid: contest id
+        :param mid: member id
         :return:
         '''
         contest = self.getContest(cid)
@@ -152,7 +152,7 @@ class SignupView(APIView):
                 'errMsg': '队伍不存在'
             }, status=404)
         team = team[0]
-        user = getUser(request.session.get('name'))
+        user = getUser(request.session.get('login'))
         if mid == 0:
             '''自己退出队伍'''
             member = team.teamMember.filter(account=user)
@@ -163,6 +163,7 @@ class SignupView(APIView):
                 }, status=401)
             member = member[0]
         else:
+            '''队长移除队员'''
             leader = team.teamMember.get(memberRoles='leader')
             if leader != user:
                 return JsonResponse({
@@ -177,6 +178,7 @@ class SignupView(APIView):
                 }, status=404)
             member = member[0]
         team.teamMember.remove(member)
+        team.member_number -= 1
         team.save()
         return JsonResponse({
             'status': True,
