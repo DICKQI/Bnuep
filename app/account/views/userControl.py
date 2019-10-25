@@ -14,7 +14,7 @@ class UserControlView(APIView):
     @check_login
     def get(self, request):
         '''
-        获取当前账户参加的报名中的比赛
+        获取当前账户参加的报名中的比赛和个人信息
         :param request:
         :return:
         '''
@@ -24,12 +24,14 @@ class UserControlView(APIView):
             Q(contestStatus='Started')
         )
         contest = [model_to_dict(con, exclude=self.EXCLUDE_FIELDS) for con in hadJoinedContest]
+        userDetail = model_to_dict(user, exclude=['password'])
         for c in contest:
             c['beginTime'] = str(c['beginTime'])[:10]
             c['signupEndTime'] = str(c['signupEndTime'])[:10]
         return JsonResponse({
             'status': True,
             'MyContest': contest,
+            'myDetail': userDetail
         })
 
     @check_login

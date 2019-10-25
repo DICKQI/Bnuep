@@ -8,5 +8,5 @@ urlpatterns = [
     path('', AccountBaseView.as_view(), name='login_logout'),
     path('register/', RegisterView.as_view(), name='register'),
     #userControl
-    path('mycontest/', UserControlView.as_view(), name='my_contest'),
+    path('myself/', UserControlView.as_view(), name='myself'),
 ]
