@@ -28,7 +28,7 @@ class RegisterView(APIView):
             email = jsonParams.get('email')
             qq_number = jsonParams.get('qq')
             wechat = jsonParams.get('wechat')
-            phone_number = jsonParams.get('phone number')
+            phone_number = jsonParams.get('phone_number')
 
             newPassword = AccountPassword.objects.create(password=password)
             newUser = UserAccount.objects.create(
