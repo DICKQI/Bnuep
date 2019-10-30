@@ -4,6 +4,7 @@ from app.contest.models import Contest
 from django.forms import model_to_dict
 from Common.UserCommon import check_login, getUser
 from django.db.models import Q
+import json
 
 
 class UserControlView(APIView):
@@ -35,9 +36,36 @@ class UserControlView(APIView):
         })
 
     @check_login
-    def post(self, request):
+    def put(self, request):
         '''
-
+        修改个人信息
         :param request:
         :return:
         '''
+        try:
+            jsonParams = json.loads((request.body).decode('utf-8'))
+            user = getUser(request.session.get('login'))
+            if jsonParams.get('email') != '':
+                user.email = jsonParams.get('email')
+            if jsonParams.get('phone_number') != '':
+                user.phone_number = jsonParams.get('phone_number')
+            if jsonParams.get('wechat') != '':
+                user.wechat = jsonParams.get('wechat')
+            if jsonParams.get('qq_number') != '':
+                user.qq_number = jsonParams.get('qq_number')
+            if jsonParams.get('student_id') != '':
+                user.student_id = jsonParams.get('student_id')
+            if jsonParams.get('major') != '':
+                user.major = jsonParams.get('major')
+            if jsonParams.get('grade') != '':
+                user.grade = jsonParams.get('grade')
+            user.save()
+            return JsonResponse({
+                'status': True,
+                'id': user.id
+            })
+        except Exception as ex:
+            return JsonResponse({
+                'status': False,
+                'errMsg': str(ex)
+            })

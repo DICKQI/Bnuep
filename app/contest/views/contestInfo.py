@@ -14,7 +14,7 @@ class ContestView(APIView):
     @check_login
     def get(self, request, cid):
         '''
-        查看当前比赛的信息和比赛的所有参赛队伍
+        查看比赛的信息和比赛的所有参赛队伍
         :param request:
         :param cid:
         :return:
