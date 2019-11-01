@@ -23,7 +23,7 @@ class UserControlView(APIView):
         hadJoinedContest = Contest.objects.filter(
             Q(team__teamMember__account=user) &
             Q(contestStatus='Started')
-        )
+        ).distinct()
         contest = [model_to_dict(con, exclude=self.EXCLUDE_FIELDS) for con in hadJoinedContest]
         userDetail = model_to_dict(user, exclude=['password'])
         for c in contest:
