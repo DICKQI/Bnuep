@@ -2,6 +2,7 @@ from app.contest.models import TeamMember, TeamModel, Contest
 from rest_framework.views import APIView
 from django.http import JsonResponse
 from Common.UserCommon import check_login, getUser
+from django.db.models import Q
 import json
 
 
@@ -78,7 +79,10 @@ class SignupView(APIView):
                     'status': False,
                     'errMsg': '比赛已截止报名或者未开始'
                 }, status=401)
-            team = TeamModel.objects.filter(id=tid)
+            team = TeamModel.objects.filter(
+                Q(contest=contest) &
+                Q(id=tid)
+            )
             if not team.exists:
                 return JsonResponse({
                     'status': False,
@@ -209,7 +213,10 @@ class SignupView(APIView):
                 'status': False,
                 'errMsg': '比赛已截止报名或者未开始'
             }, status=401)
-        team = TeamModel.objects.filter(id=tid)
+        team = TeamModel.objects.filter(
+            Q(contest=contest) &
+            Q(id=tid)
+        )
         if not team.exists:
             return JsonResponse({
                 'status': False,

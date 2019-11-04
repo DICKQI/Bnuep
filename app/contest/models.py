@@ -33,6 +33,8 @@ class TeamModel(models.Model):
 
     member_number = models.IntegerField(verbose_name='成员人数', default=0, blank=False)
 
+    works_link = models.CharField(verbose_name='作品链接', max_length=100, blank=True, default='')
+
     def __str__(self):
         return self.works_name
 
