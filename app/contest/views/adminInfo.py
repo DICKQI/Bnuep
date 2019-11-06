@@ -1,9 +1,7 @@
 from rest_framework.views import APIView
-from Common.UserCommon import getUser
 from app.contest.models import Contest
-from django.http import JsonResponse, StreamingHttpResponse, Http404, HttpResponse
-import os, xlwt
-from xlwt import XFStyle
+from django.http import StreamingHttpResponse, Http404, HttpResponse
+import xlwt
 
 
 class AdminView(APIView):
@@ -24,7 +22,10 @@ class AdminView(APIView):
         init_sheet = ['队伍名', '作品名', '负责人', '成员1', '成员2', '作品链接']
         for i in range(6):
             sheet.write(0, i, init_sheet[i])
-        contest = Contest.objects.get(id=cid)
+        contest = Contest.objects.filter(id=cid)
+        if not contest.exists():
+            return HttpResponse('比赛不存在')
+        contest = contest[0]
         contest_team = contest.team.all()
         for i in range(1, contest_team.count() + 1):
             teamOBJ = contest_team[i - 1]
@@ -35,7 +36,8 @@ class AdminView(APIView):
                 write_array.append(name.account.name)
             for j in range(len(write_array)):
                 sheet.write(i, j, write_array[j])
-            workbook.save('sheet/' + contest.contestName + '报名表.xls')
+            sheet.write(i, 5, teamOBJ.works_link)
+        workbook.save('sheet/' + contest.contestName + '报名表.xls')
 
         try:
             response = StreamingHttpResponse(open('sheet/' + contest.contestName + '报名表.xls', 'rb'))
