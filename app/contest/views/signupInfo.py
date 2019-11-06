@@ -39,6 +39,21 @@ class SignupView(APIView):
                     'errMsg': '你在本次比赛中参加的队伍过多'
                 }, status=401)
             jsonParams = json.loads((request.body).decode('utf-8'))
+            if jsonParams.get('works_name') == '':
+                return JsonResponse({
+                    'status': False,
+                    'errMsg': '作品名不能为空'
+                }, status=403)
+            if jsonParams.get('team_name') == '':
+                return JsonResponse({
+                    'status': False,
+                    'errMsg': '团队名不能为空'
+                }, status=403)
+            if jsonParams.get('guide_teacher') == '':
+                return JsonResponse({
+                    'status': False,
+                    'errMsg': '指导老师不能为空'
+                }, status=403)
             '''创建队伍与临时比赛账户'''
             leader = TeamMember.objects.create(account=user)
             team = TeamModel.objects.create(
