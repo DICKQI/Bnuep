@@ -20,7 +20,7 @@ class UserAccount(models.Model):
 
     email = models.EmailField(verbose_name='邮箱', default='', blank=False)
 
-    qq_number = models.CharField(verbose_name='qq号码', default=0, blank=False, max_length=12)
+    qq_number = models.BigIntegerField(verbose_name='qq号码', default=0, blank=False)
 
     wechat = models.CharField(verbose_name='微信', default='', blank=False, max_length=30)
 
