@@ -82,7 +82,7 @@ class UserContestView(APIView):
         team = [model_to_dict(t, fields=self.COMMON_FIELDS) for t in myTeam]
         for i in range(len(team)):
             teamMember = myTeam[i].teamMember.all()
-            team[i]['member'] = [model_to_dict(tm, exclude=['is_cancel', 'id']) for tm in teamMember]
+            team[i]['member'] = [model_to_dict(tm, exclude=['is_cancel']) for tm in teamMember]
             for j in team[i]['member']:
                 j['name'] = UserAccount.objects.get(id=j['account']).name
             if teamMember.get(memberRoles='leader').account == user:
