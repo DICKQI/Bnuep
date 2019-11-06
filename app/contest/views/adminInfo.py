@@ -5,10 +5,12 @@ from django.http import JsonResponse, StreamingHttpResponse, Http404, HttpRespon
 import os, xlwt
 from xlwt import XFStyle
 
+
 class AdminView(APIView):
     '''
     这是一个内部接口
     '''
+
     def get(self, request, cid):
         '''
         获取比赛所有队伍的报名信息
@@ -27,7 +29,8 @@ class AdminView(APIView):
         for i in range(1, contest_team.count() + 1):
             teamOBJ = contest_team[i - 1]
             teamMember = teamOBJ.teamMember.filter(memberRoles='member')
-            write_array = [teamOBJ.team_name, teamOBJ.works_name, teamOBJ.teamMember.filter(memberRoles='leader')[0].account.name]
+            write_array = [teamOBJ.team_name, teamOBJ.works_name,
+                           teamOBJ.teamMember.filter(memberRoles='leader')[0].account.name]
             for name in teamMember:
                 write_array.append(name.account.name)
             for j in range(len(write_array)):
@@ -37,11 +40,8 @@ class AdminView(APIView):
         try:
             response = StreamingHttpResponse(open('sheet/' + contest.contestName + '报名表.xls', 'rb'))
             response['Content-Type'] = "application/octet-stream"
-            response['Content-Disposition'] = 'attachment; filename=' + '报名表.xls'
+            response['Content-Disposition'] = 'attachment; filename=' + 'signupForm.xls'
 
             return response
         except:
             raise Http404
-
-
-
