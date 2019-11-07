@@ -190,7 +190,7 @@ class SignupView(APIView):
             member = member[0]
         else:
             '''队长移除队员'''
-            leader = team.teamMember.get(memberRoles='leader')
+            leader = team.teamMember.get(memberRoles='leader').account
             if leader != user:
                 return JsonResponse({
                     'status': False,
