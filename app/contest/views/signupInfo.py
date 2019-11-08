@@ -173,13 +173,6 @@ class SignupView(APIView):
         team = team[0]
         user = getUser(request.session.get('login'))
         if mid == 0:
-            if team.member_number == 1:
-                team.delete()
-                return JsonResponse({
-                    'status': True,
-                    'tid': tid,
-                    'cid': cid
-                })
             '''自己退出队伍'''
             member = team.teamMember.filter(account=user)
             if not member.exists():
@@ -206,6 +199,18 @@ class SignupView(APIView):
         team.teamMember.remove(member)
         team.member_number -= 1
         team.save()
+        if member.memberRoles == 'leader':
+            '''如果是队长离队，则解散队伍'''
+            team.delete()
+            return JsonResponse({
+                'status': True,
+                'cid': cid,
+                'tid': tid,
+                'mid': mid,
+            })
+        if team.member_number == 0:
+            """队伍没人了就删除这个队伍"""
+            team.delete()
         return JsonResponse({
             'status': True,
             'cid': cid,
